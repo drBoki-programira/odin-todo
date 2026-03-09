@@ -1,59 +1,47 @@
 import "./styles.css"
 import { ToDoTask, Project } from "./objects"
-import { createTaskElement, TaskForm, createAddButton } from "./display"
+import { createAddButton, ProjectContentHandler } from "./display"
 
 
 const app = function() {
     const projects = [new Project("Miscellaneous")]
 
     const displayProject = function(project) {
-        const projectContent = document.querySelector("#project-content")
+        const projectContent = document.querySelector("#project-content") // should delete
 
-        // change name of the displayed project
-        const projectName = document.querySelector(".project>.subtitle")
-        projectName.textContent = project.name
+        const handler = new ProjectContentHandler()
+        handler.changeName(project.name)
+        handler.resetState()
 
-        // display all the tasks
-        projectContent.innerHTML = ""
         project.listTasks.forEach(function(task) {
-            
-            const taskElement =  createTaskElement(task)
-            const deleteTask = taskElement.querySelector("button")
+            const deleteTaskBtn = handler.createTaskElement(task)
 
-            deleteTask.addEventListener("click", function() {
+            deleteTaskBtn.addEventListener("click", function() {
                 project.remove(task)
                 displayProject(project)
             })
-
-            projectContent.appendChild(taskElement)
         })
 
-        // add new task button at the end
-        const addTask = createAddButton("Add New Task")
+        const addTaskBtn = handler.createAddButton("Add New Task")
 
-        addTask.addEventListener("click", function() {
-            const taskForm = new TaskForm()
-
-            // add form like element for creating a new task
-            projectContent.removeChild(addTask)
-            projectContent.appendChild(taskForm.containerElement)
+        addTaskBtn.addEventListener("click", function() {
+            handler.createNewTaskForm()
+            handler.remove(addTaskBtn)
             
-            taskForm.cancelBtn.addEventListener("click", function() {
-                projectContent.removeChild(taskForm.containerElement)
-                projectContent.appendChild(addTask)
+            handler.cancelBtn.addEventListener("click", function() {
+                handler.remove(handler.newTaskContainer)
+                handler.add(addTaskBtn)
             })
 
-            taskForm.confirmBtn.addEventListener("click", function() {
-                const data = taskForm.getValues()
+            handler.confirmBtn.addEventListener("click", function() {
+                const data = handler.getFormValues()
                 const newTask = new ToDoTask(data.title, "", data.dueDate)
                 project.add(newTask)
 
-                projectContent.removeChild(taskForm.containerElement)
+                handler.remove(handler.newTaskContainer)
                 displayProject(project)
             })
         })
-
-        projectContent.appendChild(addTask)
     }
 
     const listAllProjects = function() {
