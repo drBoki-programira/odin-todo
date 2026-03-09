@@ -1,14 +1,14 @@
 import "./styles.css"
 import { ToDoTask, Project } from "./objects"
-import { createTaskElement, createTaskForm, createAddTaskButton } from "./display"
+import { createTaskElement, TaskForm, createAddButton } from "./display"
 
 
 const app = function() {
-    const projects = []
-    const projectContent = document.querySelector("#project-content")
-    const projectsList = document.querySelector("#projects-list")
+    const projects = [new Project("Miscellaneous")]
 
     const displayProject = function(project) {
+        const projectContent = document.querySelector("#project-content")
+
         // change name of the displayed project
         const projectName = document.querySelector(".project>.subtitle")
         projectName.textContent = project.name
@@ -29,20 +29,37 @@ const app = function() {
         })
 
         // add new task button at the end
-        const addTask = createAddTaskButton()
+        const addTask = createAddButton("Add New Task")
 
         addTask.addEventListener("click", function() {
-            const taskForm = createTaskForm()
+            const taskForm = new TaskForm()
 
+            // add form like element for creating a new task
             projectContent.removeChild(addTask)
-            projectContent.appendChild(taskForm)
+            projectContent.appendChild(taskForm.containerElement)
+            
+            taskForm.cancelBtn.addEventListener("click", function() {
+                projectContent.removeChild(taskForm.containerElement)
+                projectContent.appendChild(addTask)
+            })
+
+            taskForm.confirmBtn.addEventListener("click", function() {
+                const data = taskForm.getValues()
+                const newTask = new ToDoTask(data.title, "", data.dueDate)
+                project.add(newTask)
+
+                projectContent.removeChild(taskForm.containerElement)
+                displayProject(project)
+            })
         })
 
         projectContent.appendChild(addTask)
     }
 
     const listAllProjects = function() {
-        this.projects.forEach(function (project) {
+        const projectsList = document.querySelector("#projects-list")
+        
+        projects.forEach(function (project) {
             const liELement = document.createElement("li")
 
             liELement.textContent = project.name
@@ -50,7 +67,17 @@ const app = function() {
 
             projectsList.appendChild(liELement)
         })
+        const addProject = createAddButton("Add New Project")
+
+        addProject.addEventListener("click", function() {
+            projectsList.removeChild(addProject)
+        })
+
+        projectsList.appendChild(addProject)
     }
+
+    displayProject(projects[0])
+    listAllProjects()
 
     return { displayProject, listAllProjects, projects } 
 } ()
