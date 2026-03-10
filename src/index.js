@@ -1,14 +1,17 @@
 import "./styles.css"
 import { ToDoTask, Project } from "./objects"
-import { createAddButton, ProjectContentHandler } from "./display"
+import { ProjectContentHandler, ListProjectsHandler } from "./display"
 
 
 const app = function() {
     const projects = [new Project("Miscellaneous")]
 
-    const displayProject = function(project) {
-        const projectContent = document.querySelector("#project-content") // should delete
+    const remove = function(project) {
+        const idx = projects.findIndex(proj => proj.name === project.name)
+        projects.splice(idx, 1)
+    }
 
+    const displayProject = function(project) {
         const handler = new ProjectContentHandler()
         handler.changeName(project.name)
         handler.resetState()
@@ -45,23 +48,39 @@ const app = function() {
     }
 
     const listAllProjects = function() {
-        const projectsList = document.querySelector("#projects-list")
+        const handler = new ListProjectsHandler()
+        handler.resetState()
         
         projects.forEach(function (project) {
-            const liELement = document.createElement("li")
+            const [listItem, delBtn] = handler.createListItem(project.name)
 
-            liELement.textContent = project.name
-            liELement.addEventListener("click", () => displayProject(project))
-
-            projectsList.appendChild(liELement)
-        })
-        const addProject = createAddButton("Add New Project")
-
-        addProject.addEventListener("click", function() {
-            projectsList.removeChild(addProject)
+            listItem.addEventListener("click", () => displayProject(project))
+            
+            delBtn.addEventListener("click", function() {
+                remove(project)
+                listAllProjects()
+            })
         })
 
-        projectsList.appendChild(addProject)
+        const addProjectBtn = handler.createAddButton("Add New Project")
+        addProjectBtn.addEventListener("click", function() {
+            handler.createNewProjectForm()
+            handler.remove(addProjectBtn)
+
+            handler.cancelBtn.addEventListener("click", function() {
+                handler.remove(handler.newProjectContainer)
+                handler.add(addProjectBtn)
+            })
+
+            handler.confirmBtn.addEventListener("click", function() {
+                const newName = handler.getNewProjectName()
+                const newProject = new Project(newName)
+
+                projects.push(newProject)
+                handler.remove(handler.newProjectContainer)
+                listAllProjects()
+            })
+        })
     }
 
     displayProject(projects[0])
