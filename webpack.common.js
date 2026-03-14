@@ -21,7 +21,7 @@ export default {
           use: ["style-loader", "css-loader"],
         },
         {
-          test: /\.jpg$/i,
+          test: /\.svg$/i,
           type: "asset/resource",
         }
       ],

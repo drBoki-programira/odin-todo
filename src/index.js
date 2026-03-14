@@ -25,7 +25,7 @@ const app = function() {
             })
         })
 
-        const addTaskBtn = handler.createAddButton("Add New Task")
+        const addTaskBtn = handler.createAddButton("New Task")
 
         addTaskBtn.addEventListener("click", function() {
             handler.createNewTaskForm()
@@ -62,7 +62,7 @@ const app = function() {
             })
         })
 
-        const addProjectBtn = handler.createAddButton("Add New Project")
+        const addProjectBtn = handler.createAddButton("New Project")
         addProjectBtn.addEventListener("click", function() {
             handler.createNewProjectForm()
             handler.remove(addProjectBtn)

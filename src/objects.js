@@ -2,7 +2,7 @@ export class ToDoTask {
     completed = false
     id = crypto.randomUUID()
 
-    constructor(title, desc="", dueDate, priority="Normal") {
+    constructor(title, desc="", dueDate, priority="normal") {
         this.title = title
         this.desc = desc
         this.dueDate = dueDate
