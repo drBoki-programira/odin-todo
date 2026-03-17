@@ -17,11 +17,21 @@ const app = function() {
         handler.resetState()
 
         project.listTasks.forEach(function(task) {
-            const deleteTaskBtn = handler.createTaskElement(task)
+            const [deleteTaskBtn, checkBoxBtn, checkMark, taskContainer] = handler.createTaskElement(task)
 
             deleteTaskBtn.addEventListener("click", function() {
                 project.remove(task)
                 displayProject(project)
+            })
+
+            checkBoxBtn.addEventListener("click", function() {
+                if (checkMark.checked) {
+                    handler.completeTask(taskContainer)
+                    task.completed = true
+                } else {
+                    handler.uncompleteTask(taskContainer)
+                    task.completed = false
+                }
             })
         })
 
@@ -38,7 +48,7 @@ const app = function() {
 
             handler.confirmBtn.addEventListener("click", function() {
                 const data = handler.getFormValues()
-                const newTask = new ToDoTask(data.title, "", data.dueDate)
+                const newTask = new ToDoTask(data.title, data.desc, data.dueDate, data.priority)
                 project.add(newTask)
 
                 handler.remove(handler.newTaskContainer)
@@ -92,10 +102,10 @@ const app = function() {
 const proj1 = new Project("Misc")
 const proj2 = new Project("Chores")
 const proj3 = new Project("Music")
-const task1 = new ToDoTask("buy shoes", "", "26.5.26")
-const task2 = new ToDoTask("buy milk", "", "28.5.26")
+const task1 = new ToDoTask("buy shoes", "something something", "26.5.26", "high")
+const task2 = new ToDoTask("buy milk", "words", "28.5.26", "low")
 const task3 = new ToDoTask("clean apt", "", "26.5.26")
-const task4 = new ToDoTask("listen mozzart", "", "26.5.26")
+const task4 = new ToDoTask("listen mozzart", "yo yoy yo", "26.5.26")
 const task5 = new ToDoTask("write symphony", "", "26.5.26")
 
 proj1.add(task1)

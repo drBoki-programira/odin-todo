@@ -45,18 +45,40 @@ export class ProjectContentHandler extends DomHandler {
         nameElement.textContent = projectName
     }
 
+    completeTask(element) {
+        const flag = element.querySelector("div")
+
+        element.classList.add("completed")
+        flag.classList.add("completed-flag")
+    }
+
+    uncompleteTask(element) {
+        const flag = element.querySelector("div")
+
+        element.classList.remove("completed")
+        flag.classList.remove("completed-flag")
+    }
+
     createTaskElement(task) {
-        // creates task element from task data and returns delete button referance
+        // creates task element and return references of bunch of elements
         const taskContainer = this.makeChildOf(this.topContainer, "li", {"className": "task"})
     
-        this.makeChildOf(taskContainer, "input", {"type": "checkbox"})
-        this.makeChildOf(taskContainer, "div", {"className": `priority ${task.priority}`})
+        const checkBox = this.makeChildOf(taskContainer, "label", {"className": "flag-check"})
+        this.makeChildOf(checkBox, "div", {"className": `priority ${task.priority}`})
+        const checkMark = this.makeChildOf(checkBox, "input", {"type": "checkbox"})
+
         this.makeChildOf(taskContainer, "div", {"className": "task-title", "textContent": task.title})
         this.makeChildOf(taskContainer, "div", {"textContent": task.dueDate})
+        
         const delBtn = this.makeChildOf(taskContainer, "button", {"className": "del-btn"})
         this.makeChildOf(delBtn, "img", {"src": trashCan})
 
-        return delBtn
+        if (task.completed) {
+            checkMark.checked = true
+            this.completeTask(taskContainer)
+        }
+
+        return [delBtn, checkBox, checkMark, taskContainer]
     }
 
     createNewTaskForm() {
@@ -92,9 +114,11 @@ export class ProjectContentHandler extends DomHandler {
 
     getFormValues() {
         const title = this.inputTitle.value.trim()
+        const desc = this.inputDesc.value.trim()
         const dueDate = this.inputDue.value.trim()
+        const priority = document.querySelector("input[name='priority']:checked").value
 
-        return { title, dueDate }
+        return { title, desc, dueDate, priority }
     }
 }
 
