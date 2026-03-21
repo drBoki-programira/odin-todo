@@ -1,5 +1,6 @@
 import trashCan from "./assets/delete.svg"
 import plusSign from "./assets/plus.svg"
+import { format } from "date-fns"
 
 class DomHandler {
 
@@ -68,7 +69,7 @@ export class ProjectContentHandler extends DomHandler {
         const checkMark = this.makeChildOf(checkBox, "input", {"type": "checkbox"})
 
         this.makeChildOf(taskContainer, "div", {"className": "task-title", "textContent": task.title})
-        this.makeChildOf(taskContainer, "div", {"textContent": task.dueDate})
+        this.makeChildOf(taskContainer, "div", {"textContent": task.dueIn()})
         
         const delBtn = this.makeChildOf(taskContainer, "button", {"className": "del-btn"})
         this.makeChildOf(delBtn, "img", {"src": trashCan})
@@ -105,7 +106,8 @@ export class ProjectContentHandler extends DomHandler {
         this.makeChildOf(option3, "input", {"type": "radio", "name": "priority", "value": "low"})
         this.makeChildOf(option3, "span", {"textContent": "Low"})
 
-        this.inputDue = this.makeChildOf(input2, "input", {"type": "date", "placeholder": "Due Date"})
+        const todayDate = new Date()
+        this.inputDue = this.makeChildOf(input2, "input", {"type": "date", "valueAsDate": todayDate, "min": format(todayDate, "yyyy-MM-dd")})
         
         const btns = this.makeChildOf(this.newTaskContainer, "div", {"className": "form-btns"})
         this.cancelBtn = this.makeChildOf(btns, "button", {"className": "cancel-btn", "textContent": "Cancel"})
@@ -115,7 +117,7 @@ export class ProjectContentHandler extends DomHandler {
     getFormValues() {
         const title = this.inputTitle.value.trim()
         const desc = this.inputDesc.value.trim()
-        const dueDate = this.inputDue.value.trim()
+        const dueDate = this.inputDue.valueAsDate
         const priority = document.querySelector("input[name='priority']:checked").value
 
         return { title, desc, dueDate, priority }
