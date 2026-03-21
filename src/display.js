@@ -154,3 +154,32 @@ export class ListProjectsHandler extends DomHandler {
         return name
     }
 }
+
+export class TaskDetailsHandler extends DomHandler {
+    topContainer = document.querySelector("#task-details")
+
+    displayDetails(task) {
+        this.topContainer.innerHTML = ""
+
+        this.makeChildOf(this.topContainer, "div", {"className": "field-key", "textContent": "Task"})
+        this.makeChildOf(this.topContainer, "div", {"className": "field-value", "textContent": task.title})
+
+        this.makeChildOf(this.topContainer, "div", {"className": "field-key", "textContent": "More info"})
+        this.makeChildOf(this.topContainer, "div", {"className": "field-value", "textContent": task.desc})
+        
+        this.makeChildOf(this.topContainer, "div", {"className": "field-key", "textContent": "Created on"})
+        this.makeChildOf(this.topContainer, "div", {"className": "field-value", "textContent": format(task.createdDate, "dd/MM/yyyy")})
+        
+        this.makeChildOf(this.topContainer, "div", {"className": "field-key", "textContent": "Due date"})
+        this.makeChildOf(this.topContainer, "div", {"className": "field-value", "textContent": format(task.dueDate, "dd/MM/yyyy")})
+
+        this.makeChildOf(this.topContainer, "div", {"className": "field-key", "textContent": "Priority"})
+        this.makeChildOf(this.topContainer, "div", {"className": "field-value", "textContent": task.priority.toUpperCase()})
+
+        if (task.completed) {
+            this.makeChildOf(this.topContainer, "div", {"className": "field-completed", "textContent": "Completed!"})
+        } else {
+            this.makeChildOf(this.topContainer, "div", {"className": "field-completed", "textContent": "Not completed yet!"})
+        }
+    }
+}

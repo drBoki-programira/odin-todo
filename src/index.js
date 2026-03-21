@@ -1,6 +1,6 @@
 import "./styles.css"
 import { ToDoTask, Project } from "./objects"
-import { ProjectContentHandler, ListProjectsHandler } from "./display"
+import { ProjectContentHandler, ListProjectsHandler, TaskDetailsHandler } from "./display"
 
 
 const app = function() {
@@ -32,6 +32,12 @@ const app = function() {
                     handler.uncompleteTask(taskContainer)
                     task.completed = false
                 }
+            })
+
+            taskContainer.addEventListener("click", function() {
+                const taskHandler = new TaskDetailsHandler()
+
+                taskHandler.displayDetails(task)
             })
         })
 
