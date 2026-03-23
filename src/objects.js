@@ -22,6 +22,17 @@ export class ToDoTask {
             return "Due time has passed"
         }
     }
+
+    static fromStored(data) {
+
+        const storedTask = new this(data.title, data.desc, data.dueDate, data.priority)
+
+        storedTask.completed = data.completed
+        storedTask.createdDate = data.createdDate
+        storedTask.id = data.id
+
+        return storedTask
+    }
 }
 
 export class Project {

@@ -25,6 +25,12 @@ class DomHandler {
         return btn
     }
 
+    createInfoMessage(text) {
+        const info = this.makeChildOf(this.topContainer, "div", {"className": "info-message", "textContent": text})
+
+        return info
+    }
+
     remove(child) {
         this.topContainer.removeChild(child)
     }
@@ -159,8 +165,6 @@ export class TaskDetailsHandler extends DomHandler {
     topContainer = document.querySelector("#task-details")
 
     displayDetails(task) {
-        this.topContainer.innerHTML = ""
-
         this.makeChildOf(this.topContainer, "div", {"className": "field-key", "textContent": "Task"})
         this.makeChildOf(this.topContainer, "div", {"className": "field-value", "textContent": task.title})
 

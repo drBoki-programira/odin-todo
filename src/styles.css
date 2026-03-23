@@ -257,6 +257,15 @@ input[type="checkbox"] {
     font-weight: 700;
 }
 
+.info-message {
+    grid-column: span 2;
+    margin: 10px 20px;
+    padding: 10px;
+    font-size: 1.2rem;
+    font-style: oblique;
+    font-weight: 500;
+}
+
 .footer {
     grid-column: span 3;
     text-align: center;
